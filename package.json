@@ -1,0 +1,17 @@
+{
+  "name": "vue-webpack-boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate by Vue3 and Webpack",
+  "main": "main.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Vue3",
+    "Webpack",
+    "TypeScript",
+    "Boilerplate"
+  ],
+  "author": "Eathyn",
+  "license": "MIT"
+}
