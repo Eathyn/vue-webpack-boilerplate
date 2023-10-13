@@ -4,7 +4,8 @@
   "description": "A boilerplate by Vue3 and Webpack",
   "main": "main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "webpack --config ./webpack-config/dev.js",
+    "build": "webpack --config ./webpack-config/prod.js"
   },
   "keywords": [
     "Vue3",
@@ -13,5 +14,11 @@
     "Boilerplate"
   ],
   "author": "Eathyn",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.8.5",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^5.9.0"
+  }
 }
