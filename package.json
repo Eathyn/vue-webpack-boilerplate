@@ -4,7 +4,7 @@
   "description": "A boilerplate by Vue3 and Webpack",
   "main": "main.ts",
   "scripts": {
-    "dev": "webpack --config ./webpack-config/dev.js",
+    "dev": "webpack serve --config ./webpack-config/dev.js",
     "build": "webpack --config ./webpack-config/prod.js"
   },
   "keywords": [
@@ -17,8 +17,17 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.8.5",
+    "css-loader": "^6.8.1",
+    "css-minimizer-webpack-plugin": "^5.0.1",
+    "dotenv": "^16.3.1",
+    "html-webpack-plugin": "^5.5.3",
+    "mini-css-extract-plugin": "^2.7.6",
+    "postcss": "^8.4.31",
+    "postcss-loader": "^7.3.3",
+    "postcss-preset-env": "^9.2.0",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
     "webpack-merge": "^5.9.0"
   }
 }

@@ -1,6 +1,5 @@
 const { resolve } = require('path')
-
-console.log(process.cwd())
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: resolve(process.cwd(), 'src/main.js'),
@@ -9,5 +8,11 @@ module.exports = {
     path: resolve(process.cwd(), 'dist'),
     filename: 'main.js',
     clean: true,
-  }
+  },
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: resolve(process.cwd(), 'public/index.html'),
+    }),
+  ],
 }
