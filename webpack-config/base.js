@@ -1,30 +1,64 @@
 const { resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
+const { DefinePlugin } = require('webpack')
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+
+const isProd = process.env.NODE_ENV
+const outputFilename = isProd ? 'js/[name].js' : 'js/[name].[contenthash:8].js'
 
 module.exports = {
+  context: process.cwd(),
+
   entry: resolve(process.cwd(), 'src/main.ts'),
 
   output: {
     path: resolve(process.cwd(), 'dist'),
-    filename: 'main.js',
+    filename: outputFilename,
+    chunkFilename: outputFilename,
     clean: true,
   },
 
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      '@': resolve(process.cwd(), 'src'),
+    },
+    extensions: ['.tsx', '.ts', '.mjs', '.js', '.jsx', '.vue'],
+  },
+
+  watchOptions: {
+    ignored: /node_modules/,
   },
 
   module: {
+    noParse: /^vue$/,
     rules: [
       {
-        test: /\.js$/,
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
+      {
+        test: /\.m?jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: 'ts-loader',
+        use: [
+          'babel-loader',
+          {
+            loader: 'ts-loader',
+            options: {
+              appendTsxSuffixTo: [/\.vue$/],
+              transpileOnly: true,
+            },
+          },
+        ],
       },
     ],
   },
@@ -33,5 +67,90 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: resolve(process.cwd(), 'public/index.html'),
     }),
+    new VueLoaderPlugin(),
+    new DefinePlugin({
+      __VUE_OPTIONS_API__: 'false',
+      __VUE_PROD_DEVTOOLS__: 'false',
+    }),
+    new CaseSensitivePathsPlugin(),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: resolve('public'),
+          toType: 'dir',
+          globOptions: {
+            ignore: ['.DS_Store', '**/index.html'],
+          },
+          noErrorOnMissing: true,
+        },
+      ],
+    }),
+    new ESLintPlugin({
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.vue'],
+    }),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        extensions: {
+          vue: {
+            enabled: true,
+            compiler: '@vue/compiler-sfc',
+          },
+        },
+      },
+    }),
   ],
+
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        defaultVendors: {
+          name: 'chunk-vendors',
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          chunks: 'initial',
+        },
+        common: {
+          name: 'chunk-common',
+          minChunks: 2,
+          priority: -20,
+          chunks: 'initial',
+          reuseExistingChunk: true,
+        },
+      },
+    },
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+        terserOptions: {
+          compress: {
+            arrows: false,
+            collapse_vars: false,
+            comparisons: false,
+            computed_props: false,
+            hoist_funs: false,
+            hoist_props: false,
+            hoist_vars: false,
+            inline: false,
+            loops: false,
+            negate_iife: false,
+            properties: false,
+            reduce_funcs: false,
+            reduce_vars: false,
+            switches: false,
+            toplevel: false,
+            typeofs: false,
+            booleans: true,
+            if_return: true,
+            sequences: true,
+            unused: true,
+            conditionals: true,
+            dead_code: true,
+            evaluate: true,
+          },
+        },
+      }),
+    ],
+  },
 }

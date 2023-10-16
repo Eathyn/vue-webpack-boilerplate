@@ -1,11 +1,5 @@
-interface Person {
-  name: string
-  age: number
-}
+import { createApp } from 'vue'
+import App from './App.vue'
 
-const person: Person = {
-  name: 'Eathyn',
-  age: 26,
-}
-
-console.log(person)
+const app = createApp(App)
+app.mount('#app')
