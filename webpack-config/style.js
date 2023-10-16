@@ -32,21 +32,19 @@ const rules = [
   },
   {
     test: /\.p(ost)?css$/i,
-    use: [
-      'style-loader',
-      'css-loader',
-      'postcss-loader',
-    ],
+    use: ['style-loader', 'css-loader', 'postcss-loader'],
   },
 ]
 const plugins = []
 const minimizer = []
 
 if (isProd) {
-  plugins.push(new MiniCssExtractPlugin({
-    filename: 'css/[name].[contenthash:8].css',
-    chunkFilename: 'css/[name].[contenthash:8].css',
-  }))
+  plugins.push(
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].[contenthash:8].css',
+      chunkFilename: 'css/[name].[contenthash:8].css',
+    }),
+  )
   minimizer.push(new CssMinimizerPlugin())
 }
 
