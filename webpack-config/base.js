@@ -2,12 +2,16 @@ const { resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: resolve(process.cwd(), 'src/main.js'),
+  entry: resolve(process.cwd(), 'src/main.ts'),
 
   output: {
     path: resolve(process.cwd(), 'dist'),
     filename: 'main.js',
     clean: true,
+  },
+
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
   },
 
   module: {
@@ -16,6 +20,11 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader',
       },
     ],
   },
