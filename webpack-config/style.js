@@ -32,7 +32,11 @@ const rules = [
   },
   {
     test: /\.p(ost)?css$/i,
-    use: ['style-loader', 'css-loader', 'postcss-loader'],
+    use: [
+      isProd ? MiniCssExtractPlugin.loader : 'vue-style-loader',
+      'css-loader',
+      'postcss-loader',
+    ],
   },
 ]
 const plugins = []
