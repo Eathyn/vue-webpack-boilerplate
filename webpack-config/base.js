@@ -60,6 +60,34 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.svg$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'img/[name].[hash:8][ext]',
+        },
+      },
+      {
+        test: /\.(png|jpe?g|gif|webp|avif)$/,
+        type: 'asset',
+        generator: {
+          filename: 'img/[name].[hash:8][ext]',
+        },
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)$/,
+        type: 'asset',
+        generator: {
+          filename: 'media/[name].[hash:8][ext]',
+        },
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)$/,
+        type: 'asset',
+        generator: {
+          filename: 'font/[name].[hash:8][ext]',
+        },
+      },
     ],
   },
 
