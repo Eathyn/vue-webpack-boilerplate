@@ -35,7 +35,7 @@ module.exports = {
   },
 
   module: {
-    noParse: /^vue$/,
+    noParse: /^(vue|vue-router)$/,
     rules: [
       {
         test: /\.vue$/,
