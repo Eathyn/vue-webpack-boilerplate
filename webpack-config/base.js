@@ -31,6 +31,7 @@ module.exports = {
   },
 
   watchOptions: {
+    // https://github.com/TypeStrong/fork-ts-checker-webpack-plugin#installation
     ignored: /node_modules/,
   },
 
