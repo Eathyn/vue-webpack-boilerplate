@@ -43,10 +43,11 @@ const plugins = []
 const minimizer = []
 
 if (isProd) {
+  const outputFilename = 'css/[name].[contenthash:8].css'
   plugins.push(
     new MiniCssExtractPlugin({
-      filename: 'css/[name].[contenthash:8].css',
-      chunkFilename: 'css/[name].[contenthash:8].css',
+      filename: outputFilename,
+      chunkFilename: outputFilename,
     }),
   )
   minimizer.push(new CssMinimizerPlugin())

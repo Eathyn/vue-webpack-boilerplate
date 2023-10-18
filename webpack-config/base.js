@@ -8,8 +8,8 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
-const isProd = process.env.NODE_ENV
-const outputFilename = isProd ? 'js/[name].js' : 'js/[name].[contenthash:8].js'
+const isProd = process.env.NODE_ENV === 'production'
+const outputFilename = isProd ? 'js/[name].[contenthash:8].js' : 'js/[name].js'
 
 module.exports = {
   context: process.cwd(),
