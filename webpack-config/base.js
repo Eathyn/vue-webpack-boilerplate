@@ -7,9 +7,11 @@ const CopyPlugin = require('copy-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const threadLoader = require('thread-loader')
 
 const isProd = process.env.NODE_ENV === 'production'
 const outputFilename = isProd ? 'js/[name].[contenthash:8].js' : 'js/[name].js'
+threadLoader.warmup({}, ['babel-loader'])
 
 module.exports = {
   context: process.cwd(),
@@ -44,17 +46,28 @@ module.exports = {
       {
         test: /\.m?jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          cacheDirectory: true,
-          cacheCompression: false,
-        },
+        use: [
+          'thread-loader',
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              cacheCompression: false,
+            },
+          },
+        ],
       },
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         use: [
-          'babel-loader',
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              cacheCompression: false,
+            },
+          },
           {
             loader: 'ts-loader',
             options: {
@@ -119,6 +132,7 @@ module.exports = {
     }),
     new ESLintPlugin({
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.vue'],
+      threads: true,
     }),
     new ForkTsCheckerWebpackPlugin({
       typescript: {
