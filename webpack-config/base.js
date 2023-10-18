@@ -45,6 +45,10 @@ module.exports = {
         test: /\.m?jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+          cacheCompression: false,
+        },
       },
       {
         test: /\.tsx?$/,
