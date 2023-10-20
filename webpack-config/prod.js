@@ -19,6 +19,7 @@ module.exports = merge(base, style, {
       test: compressFileExt,
       threshold: 10240,
       minRatio: 0.8,
+      exclude: /stats.html$/,
     }),
     new CompressionPlugin({
       filename: '[path][base].br',
@@ -32,6 +33,7 @@ module.exports = merge(base, style, {
       threshold: 10240,
       minRatio: 0.8,
       deleteOriginalAssets: false,
+      exclude: /stats.html$/,
     }),
   ],
 })
