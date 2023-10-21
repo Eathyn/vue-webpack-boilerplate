@@ -8,6 +8,9 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const threadLoader = require('thread-loader')
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+// const { BundleStatsWebpackPlugin } = require('bundle-stats-webpack-plugin')
 
 const isProd = process.env.NODE_ENV === 'production'
 const outputFilename = isProd ? 'js/[name].[contenthash:8].js' : 'js/[name].js'
@@ -144,6 +147,10 @@ module.exports = {
         },
       },
     }),
+    new BundleAnalyzerPlugin(),
+    // new BundleStatsWebpackPlugin({
+    //   outDir: '../webpack-config',
+    // }),
   ],
 
   optimization: {
