@@ -8,13 +8,56 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const threadLoader = require('thread-loader')
-const BundleAnalyzerPlugin =
-  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-// const { BundleStatsWebpackPlugin } = require('bundle-stats-webpack-plugin')
 
 const isProd = process.env.NODE_ENV === 'production'
 const outputFilename = isProd ? 'js/[name].[contenthash:8].js' : 'js/[name].js'
 threadLoader.warmup({}, ['babel-loader'])
+
+const plugins = [
+  new HtmlWebpackPlugin({
+    template: resolve(process.cwd(), 'public/index.html'),
+  }),
+  new VueLoaderPlugin(),
+  new DefinePlugin({
+    __VUE_OPTIONS_API__: 'false',
+    __VUE_PROD_DEVTOOLS__: 'false',
+    'process.env': JSON.stringify(process.env),
+  }),
+  new CaseSensitivePathsPlugin(),
+  new CopyPlugin({
+    patterns: [
+      {
+        from: resolve('public'),
+        toType: 'dir',
+        globOptions: {
+          ignore: ['.DS_Store', '**/index.html'],
+        },
+        noErrorOnMissing: true,
+      },
+    ],
+  }),
+  new ESLintPlugin({
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.vue'],
+    threads: true,
+  }),
+  new ForkTsCheckerWebpackPlugin({
+    typescript: {
+      extensions: {
+        vue: {
+          enabled: true,
+          compiler: '@vue/compiler-sfc',
+        },
+      },
+    },
+  }),
+]
+
+if (process.env.ANALYSE_BUNDLE === 'true') {
+  const BundleAnalyzerPlugin =
+    require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
+  plugins.push(new BundleAnalyzerPlugin())
+}
 
 module.exports = {
   context: process.cwd(),
@@ -38,6 +81,14 @@ module.exports = {
   watchOptions: {
     // https://github.com/TypeStrong/fork-ts-checker-webpack-plugin#installation
     ignored: /node_modules/,
+  },
+
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename],
+    },
+    profile: true,
   },
 
   module: {
@@ -112,47 +163,7 @@ module.exports = {
     ],
   },
 
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: resolve(process.cwd(), 'public/index.html'),
-    }),
-    new VueLoaderPlugin(),
-    new DefinePlugin({
-      __VUE_OPTIONS_API__: 'false',
-      __VUE_PROD_DEVTOOLS__: 'false',
-    }),
-    new CaseSensitivePathsPlugin(),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: resolve('public'),
-          toType: 'dir',
-          globOptions: {
-            ignore: ['.DS_Store', '**/index.html'],
-          },
-          noErrorOnMissing: true,
-        },
-      ],
-    }),
-    new ESLintPlugin({
-      extensions: ['.ts', '.tsx', '.js', '.jsx', '.vue'],
-      threads: true,
-    }),
-    new ForkTsCheckerWebpackPlugin({
-      typescript: {
-        extensions: {
-          vue: {
-            enabled: true,
-            compiler: '@vue/compiler-sfc',
-          },
-        },
-      },
-    }),
-    new BundleAnalyzerPlugin(),
-    // new BundleStatsWebpackPlugin({
-    //   outDir: '../webpack-config',
-    // }),
-  ],
+  plugins,
 
   optimization: {
     splitChunks: {
